@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Recipies{% endblock %}
+
+{% block content %}
+
+<h1>Recipies</h1>
+
+<u1>
+  {% for recipie in recipies %}
+  <li>
+    <a href="/recipies/{{ recipie.id }}">
+      {{ recipie.title }}
+    </a>
+    <p>{{ recipie.summary }}<p>
+  </li>
+  {% endfor %}
+</ul>
+
+<a href="/recipies/new">new recipie</a>
+{% endblock %}

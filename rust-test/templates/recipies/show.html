@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} {% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+<h3>{{ summary }}</h3>
+<ol>
+  {% for ingredient in ingredients %}
+    <li>{{ ingredient.title }}: {{ ingredient.quantity }}</li>
+  {% endfor %}
+</ol>
+
+<ol>
+  {% for step in steps %}
+    <li>{{ step.text }}</li>
+  {% endfor %}
+</ol>
+{% endblock %}
