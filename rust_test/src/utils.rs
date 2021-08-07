@@ -23,7 +23,7 @@ impl AsRoute for str {
 }
 
 impl AsRoute for String {
-    fn as_route(%self) -> std::borrow::Cow<str> {
+    fn as_route(&self) -> std::borrow::Cow<str> {
         self.into()
     }
 }

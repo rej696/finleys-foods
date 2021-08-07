@@ -1,11 +1,11 @@
-pub mod recipies;
+pub mod recipes;
 
 pub mod home {
     use askama::Template;
     #[derive(Template)]
     #[template(path = "home.html")]
     pub struct HomeTemplate<'a> {
-        name &'a str,
+        name: &'a str,
     }
 
     impl<'a> HomeTemplate<'a> {

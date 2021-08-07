@@ -46,20 +46,20 @@ async fn main() -> tide::Result<()> {
     
     app.at("/home").get(routes::home);
 
-    let mut recipies = app.at("/recipies");
+    let mut recipes = app.at("/recipes");
 
-    recipies
-        .post(routes::recipies::create)
-        .get(routes::recipies::index);
+    recipes
+        .post(routes::recipes::create)
+        .get(routes::recipes::index);
 
-    recipies.at("/new").get(routes::recipies::new);
+    recipes.at("/new").get(routes::recipes::new);
 
-    recipies
-        .at("/:recipie_id")
-        .get(routes::recipies::show)
-        .delete(routes::recipies::delete)
-        .put(routes::recipies::update)
-        .post(routes::recipies::update);
+    recipes
+        .at("/:recipe_id")
+        .get(routes::recipes::show)
+        .delete(routes::recipes::delete)
+        .put(routes::recipes::update)
+        .post(routes::recipes::update);
 
     app.listen("127.0.0.1:8000").await?;
     Ok(())
