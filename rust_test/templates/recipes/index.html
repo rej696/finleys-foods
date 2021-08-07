@@ -4,15 +4,17 @@
 
 {% block content %}
 
-<h1>Recipies</h1>
+<h1>Recipes</h1>
 
 <u1>
   {% for recipe in recipes %}
   <li>
-    <a href="/recipes/{{ recipe.id }}">
-      {{ recipe.title }}
-    </a>
-    <p>{{ recipe.summary }}<p>
+    <div>
+      <a href="/recipes/{{ recipe.id }}">
+        {{ recipe.title }}
+      </a>
+      <p>{{ recipe.summary }}<p>
+    </div>
   </li>
   {% endfor %}
 </ul>

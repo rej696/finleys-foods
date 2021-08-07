@@ -1,4 +1,6 @@
+use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 type Query = sqlx::Query<'static, sqlx::Sqlite>;
 type QueryAs<T> = sqlx::QueryAs<'static, sqlx::Sqlite, T>;
 
@@ -35,6 +37,14 @@ impl crate::utils::AsRoute for Recipe {
 pub struct PartialRecipe {
     pub title: Option<String>,
     pub summary: Option<String>,
+
+    #[serde(flatten)]
+    pub extra: BTreeMap<String, Value>
+    // pub ingredient_position: [6, Option<i64>],
+    // pub ingredient_title: [Option<String>],
+    // pub ingredient_quantity: [Option<String>],
+    // pub step_position: [Option<i64>],
+    // pub step_text: [Option<String>]
 }
 
 impl PartialRecipe {

@@ -5,15 +5,133 @@
 {% block content %}
 <form action="{{ action }}" method="post">
     <div>
-        <label for="title">title</label>
-        <input type="text" id="title" name="title" value="{{ title }}">
+        <div>
+            <label for="title">title</label>
+            <input type="text" name="title" value="{{ title }}">
+        </div>
+
+        <div>
+            <label for="summary">summary</label>
+            <textarea id="summary" name="summary">{{ summary }}</textarea>
+        </div>
     </div>
 
-    <div>
-        <label for="summary">summary</label>
-        <textarea id="summary" name="summary">{{ summary }}</textarea>
+    <div id="ingredient_list">
+        <div id="ingredient1">
+            <label for="1_ingredient_position">Ingredient Number</label>
+            <input type="number" name="1_ingredient_position" min="1" value="1">
+        
+            <label for="1_ingredient_title">Ingredient</label>
+            <input type="text" name="1_ingredient_title">
+            
+            <label for="1_ingredient_quantity">Ingredient Quantity</label>
+            <input type="text" name="1_ingredient_quantity">
+        </div>
+    </div>
+    <div> 
+        <p id="add_ingredient">
+            <a href="javascript:add_item('ingredient')">Add Ingredient</a>
+        </p>
+    </div>
+
+    <div id="step_list">
+        <div id="step1">
+            <label for="1_step_position">Step Number</label>
+            <input type="number" name="1_step_position" min="1" value="1">
+        
+            <label for="step_text1">Step</label>
+            <input type="text" name="1_step_text">
+        </div>
+    </div>
+    <div> 
+        <p id="add_step">
+            <a href="javascript:add_item('step')">Add Step</a>
+        </p>
     </div>
 
     <input type="submit"/>
 </form>
+
+<!-- Ingredient Template -->    
+<div id="newingredient" style="display:none">
+    <label for="_ingredient_position">Ingredient Number</label>
+    <input type="number" name="_ingredient_position" min="1" value="">
+
+    <label for="_ingredient_title">Ingredient</label>
+    <input type="text" name="_ingredient_title">
+    
+    <label for="_ingredient_quantity">Ingredient Quantity</label>
+    <input type="text" name="_ingredient_quantity">
+</div>
+
+<!-- Step Template-->
+<div id="newstep" style="display:none">
+    <label for="_step_position">Step Number</label>
+    <input type="number" name="_step_position" min="1" value="">
+
+    <label for="_step_text">Step</label>
+    <input type="text" name="_step_text">
+</div>
+
+<!-- JavaScript -->
+<script>
+    var ingredient_count = 1;
+    var step_count = 1;
+    function add_item(item)
+    {
+        var count;
+        if (item == 'ingredient') {
+            ingredient_count++;
+            count = ingredient_count;
+        } else if (item == 'step') {
+            step_count++;
+            count = step_count;
+        } else {return;}
+        var div1 = document.createElement('div');
+        div1.id = item + count;
+
+        var delLink = 
+            '<div class="delete" style="text-align:right;margin-right:65px"><a href="javascript:delIt(\''
+            + item + '\', '+ count + ', \'' + item + '_list\')">Delete '
+            + item[0].toUpperCase() + item.substring(1) + '</a></div>';
+        div1.innerHTML = document.getElementById('new' + item).innerHTML + delLink;
+        div1.children[1].value = count;
+        for (let i = 0; i < div1.children.length; i++) {
+            div1.children[i].name = count + div1.children[i].name;
+        }
+        document.getElementById(item + '_list').appendChild(div1);
+    }
+
+    function delIt(item, count, parentId)
+    {
+        if (item == "ingredient") {
+            ingredient_count--
+        } else if (item == "step") {
+            step_count--
+        } else {return;}
+        var ele = document.getElementById(item + count);
+        var parentEle = document.getElementById(parentId)
+        parentEle.removeChild(ele);
+        for (let i = count; i <= parentEle.children.length; i++) {
+            var div = parentEle.children[i - 1];
+            div.id = div.id.substring(0, div.id.length - 1);
+            div.id += i;
+            div.children[1].value = i;
+            for (let j = 0; j < div.children.length; j++) {
+                 if (div.children[j].hasAttribute('name')) {
+                    div.children[j].name = i + div.children[j].name.substring(1, div.children[j].name.length);
+                }
+            }
+            div.removeChild(div.getElementsByClassName('delete')[0])
+            let delLink = document.createElement('div');
+            delLink.className = "delete";
+            delLink.style = "text-align:right;margin-right:65px";
+            delLink.innerHTML = 
+                '<a href="javascript:delIt(\'' + item + '\', '+ i +
+                ', \'' + item + '_list\')">Delete '
+                + item[0].toUpperCase() + item.substring(1) + '</a>';
+            div.appendChild(delLink);
+        }
+    }
+</script>
 {% endblock %}

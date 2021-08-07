@@ -1,3 +1,4 @@
 Cargo.lock
 target/
 db/sqlite3.db*
+.envrc

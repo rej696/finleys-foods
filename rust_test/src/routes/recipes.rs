@@ -1,4 +1,4 @@
-use crate::records::{Recipe, PartialRecipe, Ingredient, Step};
+use crate::records::{Recipe, PartialRecipe};
 use crate::templates::recipes::*;
 use crate::utils;
 use sqlx::prelude::*;
@@ -39,7 +39,7 @@ pub async fn update(mut request: crate::Request) -> tide::Result {
         .await?;
     
     if rows_updated == 1 {
-        Ok(tide::Redirect::new(format!("/recipe/{}", recipe_id)).into())
+        Ok(tide::Redirect::new(format!("/recipes/{}", recipe_id)).into())
     } else {
         Ok(RecipeForm::for_partial_recipe(&recipe).into())
     }
@@ -48,14 +48,42 @@ pub async fn update(mut request: crate::Request) -> tide::Result {
 pub async fn create(mut request: crate::Request) -> tide::Result {
     let db = &request.state().db;
     let mut tx = db.begin().await?;
+    // println!("{:?}", request.body_form().await?);
+    // println!("{:?}", request.body_string().await?);
     let recipe : PartialRecipe = utils::deserialize_body(&mut request).await?;
     let created = recipe.create().execute(&mut tx).await?;
+    // make new container for ingredients and steps, perhaps a 2D list, or dictionary, maybe make use of existing structs?
+    for (key , value) in recipe.extra.iter() {
+        println!("{} / {}", key, value);
+        let id: Vec<&str> = key.split('_').collect();
+        // create new ingredient/step entry every time id increases
+        match id[1] {
+            "ingredient" => {
+                // insert data into relevent fields
+                match id[2] {
+                    "position" => {()}
+                    "title" => {()}
+                    "quantity" => {()}
+                    _ => {()} // error message here?
+                }
+            }
+            "step" => {
+                match id[2] {
+                    "position" => {()}
+                    "text" => {()}
+                    _ => {()} // error message here?
+                }
+            }
+            _ => {()} // error message here?
+        }
+
+    }
 
     if created == 1 {
         let (last_id,) = Recipe::last_id().fetch_one(&mut tx).await?;
         tx.commit().await?;
 
-        Ok(tide::Redirect::new(format!("/recipe/{}", last_id)).into())
+        Ok(tide::Redirect::new(format!("/recipes/{}", last_id)).into())
     } else {
         Ok(RecipeForm::for_partial_recipe(&recipe).into())
     }
@@ -63,5 +91,5 @@ pub async fn create(mut request: crate::Request) -> tide::Result {
 
 pub async fn new(_request: crate::Request) -> tide::Result {
     let recipe = PartialRecipe::default();
-    Ok(RecipeForm::for_partial_recipe(&recpie).into())
+    Ok(RecipeForm::for_partial_recipe(&recipe).into())
 }
