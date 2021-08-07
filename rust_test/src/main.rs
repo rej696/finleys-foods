@@ -38,7 +38,7 @@ async fn build_session_middleware(
 async fn main() -> tide::Result<()> {
     tide::log::with_level(tide::log::LevelFilter::Info);
     let db = db_connection().await?;
-    let mut app = tide::with_state(State {db: db.clone() });
+    let mut app = tide::with_state(State { db: db.clone() });
 
     app.with(build_session_middleware(db).await?);
 

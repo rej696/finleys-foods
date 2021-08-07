@@ -1,4 +1,4 @@
-use crate::records::{Recipe, PartialRecipe};
+use crate::records::{Recipe, PartialRecipe, Ingredient, Step};
 use crate::templates::recipes::*;
 use crate::utils;
 use sqlx::prelude::*;

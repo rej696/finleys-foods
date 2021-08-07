@@ -10,7 +10,7 @@ pub struct RecipeForm<'a> {
 }
 
 impl<'a> RecipeForm<'a> {
-    pub fn for_partial_recipe(recipie: &'a PartialRecipe) -> Self {
+    pub fn for_partial_recipe(recipe: &'a PartialRecipe) -> Self {
         Self {
             title: recipe.title.as_deref().unwrap_or_default(),
             summary: recipe.summary.as_deref().unwrap_or_default(),
