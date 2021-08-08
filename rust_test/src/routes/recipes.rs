@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+use std::vec::Vec;
 use crate::records::{Recipe, PartialRecipe};
 use crate::templates::recipes::*;
 use crate::utils;
@@ -53,29 +55,53 @@ pub async fn create(mut request: crate::Request) -> tide::Result {
     let recipe : PartialRecipe = utils::deserialize_body(&mut request).await?;
     let created = recipe.create().execute(&mut tx).await?;
     // make new container for ingredients and steps, perhaps a 2D list, or dictionary, maybe make use of existing structs?
+
+    // python version
+    // dict = {};
+    // for key, value in recipe.extra.sorted():
+    //     id = key.split('_')
+    //     dict[id[0]][id[1]][id[2]] = value
+
+    let mut data: Vec<HashMap<&str,HashMap<&str, String>>> = Vec::new();
+
     for (key , value) in recipe.extra.iter() {
         println!("{} / {}", key, value);
         let id: Vec<&str> = key.split('_').collect();
+        let i : usize = id[0].parse().unwrap();
+        let j : &str = id[1];
+        let k : &str = id[2];
         // create new ingredient/step entry every time id increases
-        match id[1] {
-            "ingredient" => {
-                // insert data into relevent fields
-                match id[2] {
-                    "position" => {()}
-                    "title" => {()}
-                    "quantity" => {()}
-                    _ => {()} // error message here?
-                }
-            }
-            "step" => {
-                match id[2] {
-                    "position" => {()}
-                    "text" => {()}
-                    _ => {()} // error message here?
-                }
-            }
-            _ => {()} // error message here?
+        if i >= data.len() {
+            let item : HashMap<&str,HashMap<&str, String>> = HashMap::new();
+            data.push(item);
         }
+        if !data[i].contains_key(id[1]) {
+            let entry: HashMap<&str, String> = HashMap::new();
+            data[i].insert(j, entry);
+        }
+        if !data[i][j].contains_key(k) {
+            let entry  = data[i].get_mut(j);
+            entry.unwrap().insert(k, value.to_string());
+        }
+        // match id[1] {
+        //     "ingredient" => {
+        //         // insert data into relevent fields
+        //         match id[2] {
+        //             "position" => {()}
+        //             "title" => {()}
+        //             "quantity" => {()}
+        //             _ => {()} // error message here?
+        //         }
+        //     }
+        //     "step" => {
+        //         match id[2] {
+        //             "position" => {()}
+        //             "text" => {()}
+        //             _ => {()} // error message here?
+        //         }
+        //     }
+        //     _ => {()} // error message here?
+        // }
 
     }
 
