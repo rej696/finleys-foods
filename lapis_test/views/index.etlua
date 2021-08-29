@@ -1,0 +1,9 @@
+<h1>Finleys Foods</h1>
+<p>Japser makes smelly food</p>
+
+<h2>Here are finley's best foods</h2>
+<ol>
+    <% for i, food in pairs(foods) do %>
+    <li><%= food %></li>
+    <% end %>
+</ol>

@@ -1,0 +1,11 @@
+<!-- views/layout.etlua -->
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= title or "Finleys Foods" %></title>
+</head>
+<body>
+    <% content_for("inner") %>
+</body>
+</html>
